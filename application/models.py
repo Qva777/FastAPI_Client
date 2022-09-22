@@ -19,3 +19,21 @@ class Task(BaseModel):
     def number_validator(cls, values):
         values["updated_at"] = datetime.now()
         return values
+
+
+# class Manager(BaseModel):
+#     username: Union[str, None] = Field(..., title="The name of the task", max_length=64)
+#     first_name: Union[str, None] = Field(..., title="The description of the item", max_length=250)
+#     last_name:
+#     email:
+#     password:
+#     created_at: datetime = datetime.now()
+#     updated_at: datetime = datetime.now()
+#
+#     class Config:
+#         validate_assignment = True
+#
+#     @root_validator
+#     def number_validator(cls, values):
+#         values["updated_at"] = datetime.now()
+#         return values

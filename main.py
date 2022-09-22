@@ -35,23 +35,18 @@ async def get_all_todos():
 @app.get('/todo/{id}')
 async def get_todo(id: int):
     try:
-
         return all_task[id]
-
     except:
-
         raise HTTPException(status_code=404, detail="Todo Not Found")
 
 
 @app.put('/todo/{id}')
 async def update_todo(id: int, task: Task):
     try:
-
         all_task[id] = task
         return all_task[id]
 
     except:
-
         raise HTTPException(status_code=404, detail="Task Not Found")
 
 
@@ -61,6 +56,5 @@ async def delete_todo(id: int):
         obj = all_task[id]
         all_task.pop(id)
         return obj
-
     except:
         raise HTTPException(status_code=404, detail="Task Not Found")
