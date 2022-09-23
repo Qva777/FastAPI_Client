@@ -1,38 +1,48 @@
-from fastapi import FastAPI, HTTPException, Query
-from typing import Optional, List
+from datetime import datetime
+from enum import Enum
 
-from application.models import Task, Manager
+from fastapi import FastAPI, HTTPException, Query
+from typing import Optional, List, Union
+
+# from application.models import Task, Manager
+from pydantic import root_validator, BaseModel, Field, validator
 
 app = FastAPI(title="FastAPI_Client")
 all_task = []
 all_managers = []
 
-# @app.get('/')
-# async def home():
-#     return {"Hello": "World"}
-# return {
-#         "item_id": item_id,
-#         "start_datetime": start_datetime,
-#         "end_datetime": end_datetime,
-#         "repeat_at": repeat_at,
-#         "process_after": process_after,
-#         "start_process": start_process,
-#         "duration": duration,
-#     }
+
+class Status(str, Enum):
+    CREATED = "1"
+    IN_PROGRESS = "2"
+    COMPLETED = "3"
 
 
-@app.post('/api/{items}')
-async def get_countries(task: Task, manager: Manager, items):
-    if items == task:
-        all_task.append(task)
-        return task
-    elif items == manager:
-        all_managers.append(manager)
-        return manager
+class Task(BaseModel):
+    name: Union[str, None] = Field(..., title="The name of the task", max_length=64)
+    description: Union[str, None] = Field(..., title="The description of the item", max_length=250)
+    status: str = Query(Status.CREATED, enum=[Status.CREATED, Status.IN_PROGRESS, Status.COMPLETED])
+    created_at: datetime = datetime.now()
+    updated_at: datetime = datetime.now()
+
+    class Config:
+        validate_assignment = True
+
+    @root_validator
+    def number_validator(cls, values):
+        values["updated_at"] = datetime.now()
+        return values
 
 
+@app.post('/api')
+async def get_countries(task: Task, ):
+    # if q1 == task.q:
+    all_task.append(task)
+    return task
 
 
+# else:
+#     return {"Status doesn't exist"}
 
 
 @app.get('/all-tasks/', response_model=List[Task])
