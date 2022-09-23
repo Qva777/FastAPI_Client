@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Body
 from typing import Optional, List, Union
 
 # from application.models import Task, Manager
@@ -21,7 +21,7 @@ class Status(str, Enum):
 class Task(BaseModel):
     name: Union[str, None] = Field(..., title="The name of the task", max_length=64)
     description: Union[str, None] = Field(..., title="The description of the item", max_length=250)
-    status: str = Query(Status.CREATED, enum=[Status.CREATED, Status.IN_PROGRESS, Status.COMPLETED])
+    status: Status
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 
@@ -35,14 +35,9 @@ class Task(BaseModel):
 
 
 @app.post('/api')
-async def get_countries(task: Task, ):
-    # if q1 == task.q:
+async def get_countries(task: Task):
     all_task.append(task)
     return task
-
-
-# else:
-#     return {"Status doesn't exist"}
 
 
 @app.get('/all-tasks/', response_model=List[Task])
