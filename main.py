@@ -1,11 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from typing import Optional, List
 
-from application.models import Task
+from application.models import Task, Manager
 
 app = FastAPI(title="FastAPI_Client")
 all_task = []
-
+all_managers = []
 
 # @app.get('/')
 # async def home():
@@ -21,37 +21,44 @@ all_task = []
 #     }
 
 
-@app.post('/todo/')
-async def create_todo(task: Task):
-    all_task.append(task)
-    return task
+@app.post('/api/{items}')
+async def get_countries(task: Task, manager: Manager, items):
+    if items == task:
+        all_task.append(task)
+        return task
+    elif items == manager:
+        all_managers.append(manager)
+        return manager
 
 
-@app.get('/todo/', response_model=List[Task])
-async def get_all_todos():
+
+
+
+
+@app.get('/all-tasks/', response_model=List[Task])
+async def get_all_tasks():
     return all_task
 
 
-@app.get('/todo/{id}')
-async def get_todo(id: int):
+@app.get('/task/{id}')
+async def get_task(id: int):
     try:
         return all_task[id]
     except:
         raise HTTPException(status_code=404, detail="Todo Not Found")
 
 
-@app.put('/todo/{id}')
-async def update_todo(id: int, task: Task):
+@app.put('/task/{id}')
+async def update_task(id: int, task: Task):
     try:
         all_task[id] = task
         return all_task[id]
-
     except:
         raise HTTPException(status_code=404, detail="Task Not Found")
 
 
-@app.delete('/todo/{id}')
-async def delete_todo(id: int):
+@app.delete('/task/{id}')
+async def delete_task(id: int):
     try:
         obj = all_task[id]
         all_task.pop(id)
