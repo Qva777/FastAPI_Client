@@ -15,7 +15,7 @@ class Status(str, Enum):
 class Task(BaseModel):
     name: Union[str, None] = Field(..., title="The name of the task", max_length=64)
     description: Union[str, None] = Field(..., title="The description of the item", max_length=250)
-    # status: Status
+    status: Status
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 

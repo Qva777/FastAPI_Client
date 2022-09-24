@@ -1,8 +1,12 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Enum
 from sqlalchemy.orm import relationship
 
 from application.database import Base
 
+class Status(str, Enum):
+    CREATED = "1"
+    IN_PROGRESS = "2"
+    COMPLETED = "3"
 
 class TaskDB(Base):
     __tablename__ = 'task'
@@ -10,7 +14,7 @@ class TaskDB(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     description = Column(String)
-    # status = Column(ForeignKey)
+    status = Column(Integer, ForeignKey('task.status'))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 
