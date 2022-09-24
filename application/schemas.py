@@ -2,7 +2,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Union
 
-from pydantic import BaseModel, validator, root_validator, Field
+from pydantic import BaseModel, root_validator, Field, EmailStr
+from uuid import UUID
 
 
 class Status(str, Enum):
@@ -14,7 +15,7 @@ class Status(str, Enum):
 class Task(BaseModel):
     name: Union[str, None] = Field(..., title="The name of the task", max_length=64)
     description: Union[str, None] = Field(..., title="The description of the item", max_length=250)
-    status: Status
+    # status: Status
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 
@@ -28,3 +29,21 @@ class Task(BaseModel):
 
 
 # class Manager(BaseModel):
+#     id: UUID
+#     username: str
+#     first_name: str
+#     last_name: str
+#     email: EmailStr
+#     password: str
+#     created_at: datetime = datetime.now()
+#     updated_at: datetime = datetime.now()
+#     # is_staff =
+#     # tasks =
+#
+#     class Config:
+#         validate_assignment = True
+#
+#     @root_validator
+#     def number_validator(cls, values):
+#         values["updated_at"] = datetime.now()
+#         return values

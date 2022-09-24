@@ -1,72 +1,73 @@
-from datetime import datetime
-from enum import Enum
-
-from fastapi import FastAPI, HTTPException, Query, Body
+from fastapi import FastAPI, HTTPException, Query, Body, Depends
 from typing import Optional, List, Union
-
-# from application.models import Task, Manager
-from pydantic import root_validator, BaseModel, Field, validator
+from application import models
+from application.schemas import Task
+from application.database import engine, SessionLocal
+from sqlalchemy.orm import Session
 
 app = FastAPI(title="FastAPI_Client")
-all_task = []
-all_managers = []
+models.Base.metadata.create_all(bind=engine)
 
 
-class Status(str, Enum):
-    CREATED = "1"
-    IN_PROGRESS = "2"
-    COMPLETED = "3"
+def get_db():
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
 
 
-class Task(BaseModel):
-    name: Union[str, None] = Field(..., title="The name of the task", max_length=64)
-    description: Union[str, None] = Field(..., title="The description of the item", max_length=250)
-    status: Status
-    created_at: datetime = datetime.now()
-    updated_at: datetime = datetime.now()
-
-    class Config:
-        validate_assignment = True
-
-    @root_validator
-    def number_validator(cls, values):
-        values["updated_at"] = datetime.now()
-        return values
+# TASK URL
+@app.get('/db-tasks/', tags=["Delete Methods"])
+async def get_all_tasks(db: Session = Depends(get_db)):
+    return db.query(models.TaskDB).all()
 
 
-@app.post('/api')
-async def get_countries(task: Task):
-    all_task.append(task)
+@app.post("/", tags=["Delete Methods"])
+def create_book(task: Task, db: Session = Depends(get_db)):
+    task_model = models.TaskDB()
+    task_model.name = task.name
+    task_model.description = task.description
+    task_model.created_at = task.created_at
+    task_model.updated_at = task.updated_at
+
+    db.add(task_model)
+    db.commit()
+
     return task
 
 
-@app.get('/all-tasks/', response_model=List[Task])
-async def get_all_tasks():
-    return all_task
+@app.put("/{task_id}")
+def update_book(task_id: int, task: Task, db: Session = Depends(get_db)):
+    task_model = db.query(models.TaskDB).filter(models.TaskDB.id == task_id).first()
+
+    if task_model is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"ID {task_id} : Does not exist"
+        )
+
+    task_model.name = task.name
+    task_model.description = task.description
+    task_model.created_at = task.created_at
+    task_model.updated_at = task.updated_at
+
+    db.add(task_model)
+    db.commit()
+
+    return task
 
 
-@app.get('/task/{id}')
-async def get_task(id: int):
-    try:
-        return all_task[id]
-    except:
-        raise HTTPException(status_code=404, detail="Todo Not Found")
+@app.delete("/{task_id}")
+def delete_book(task_id: int, db: Session = Depends(get_db)):
+    task_model = db.query(models.TaskDB).filter(models.TaskDB.id == task_id).first()
 
+    if task_model is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"ID {task_id} : Does not exist"
+        )
 
-@app.put('/task/{id}')
-async def update_task(id: int, task: Task):
-    try:
-        all_task[id] = task
-        return all_task[id]
-    except:
-        raise HTTPException(status_code=404, detail="Task Not Found")
+    db.query(models.TaskDB).filter(models.TaskDB.id == task_id).delete()
 
-
-@app.delete('/task/{id}')
-async def delete_task(id: int):
-    try:
-        obj = all_task[id]
-        all_task.pop(id)
-        return obj
-    except:
-        raise HTTPException(status_code=404, detail="Task Not Found")
+    db.commit()
