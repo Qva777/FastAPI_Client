@@ -3,18 +3,29 @@ from sqlalchemy.orm import relationship
 
 from application.database import Base
 
-class Status(str, Enum):
-    CREATED = "1"
-    IN_PROGRESS = "2"
-    COMPLETED = "3"
 
 class TaskDB(Base):
+    """Таблица моделей задач в базе данных"""
     __tablename__ = 'task'
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
+    name = Column(String, unique=True)
     description = Column(String)
     status = Column(Integer, ForeignKey('task.status'))
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
+
+
+class ManagerDB(Base):
+    """Таблица моделей менеджеров в базе данных"""
+    __tablename__ = 'manager'
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True)
+    first_name = Column(String)
+    last_name = Column(String)
+    # email = Column(String, unique=True)
+    password = Column(String)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
 

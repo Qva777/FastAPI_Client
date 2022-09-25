@@ -28,22 +28,21 @@ class Task(BaseModel):
         return values
 
 
-# class Manager(BaseModel):
-#     id: UUID
-#     username: str
-#     first_name: str
-#     last_name: str
-#     email: EmailStr
-#     password: str
-#     created_at: datetime = datetime.now()
-#     updated_at: datetime = datetime.now()
-#     # is_staff =
-#     # tasks =
-#
-#     class Config:
-#         validate_assignment = True
-#
-#     @root_validator
-#     def number_validator(cls, values):
-#         values["updated_at"] = datetime.now()
-#         return values
+class Manager(BaseModel):
+    username:Union[str, None] = Field(..., title="The description of the item", max_length=250)
+    first_name: Union[str, None] = Field(..., title="The description of the item", max_length=250)
+    last_name: Union[str, None] = Field(..., title="The description of the item", max_length=250)
+    # email: EmailStr
+    password: Union[str, None] = Field(..., title="The description of the item", max_length=250)
+    created_at: datetime = datetime.now()
+    updated_at: datetime = datetime.now()
+    # is_staff =
+    # tasks =
+
+    class Config:
+        validate_assignment = True
+
+    # @root_validator
+    # def number_validator(cls, values):
+    #     values["updated_at"] = datetime.now()
+    #     return values
