@@ -1,13 +1,10 @@
-from fastapi import FastAPI, HTTPException, Query, Body, Depends
-from typing import Optional, List, Union
-
-from fastapi.encoders import jsonable_encoder
-
+from fastapi import FastAPI, HTTPException, Depends
 from application import models
-# from application.models import TaskDB, ManagerDB
 from application.schemas import Task, Manager
 from application.database import engine, SessionLocal
 from sqlalchemy.orm import Session
+
+from fastapi_pagination import Page, paginate, LimitOffsetPage, add_pagination
 
 app = FastAPI(title="FastAPI_Client")
 models.Base.metadata.create_all(bind=engine)
@@ -22,9 +19,13 @@ def get_db():
 
 
 # TASK URL
-@app.get('/api/all-tasks/', tags=["GET Methods"])
+@app.get('/api/all-tasks/', response_model=Page[Task], tags=["GET Methods"])
+@app.get('/api/limit-offset', response_model=LimitOffsetPage[Task])
 async def get_all_tasks(db: Session = Depends(get_db)):
-    return db.query(models.TaskDB).all()
+    return paginate(db.query(models.TaskDB).all())
+
+
+add_pagination(app)
 
 
 @app.get('/api/task/{task_id}', tags=["GET Methods"])
@@ -112,7 +113,6 @@ async def get_manager(manager_id: int, db: Session = Depends(get_db)):
 
 @app.post("/api/create-manager", tags=["POST Methods"])
 def create_manager(manager: Manager, db: Session = Depends(get_db)):
-
     manager_model = models.ManagerDB()
     manager_model.username = manager.username
     manager_model.first_name = manager.first_name
@@ -129,7 +129,7 @@ def create_manager(manager: Manager, db: Session = Depends(get_db)):
 
 
 @app.put("/api/manager/{manager_id}", tags=["PUT Methods"])
-def update_book(manager_id: int, manager: Manager, db: Session = Depends(get_db)):
+def update_manager(manager_id: int, manager: Manager, db: Session = Depends(get_db)):
     manager_model = db.query(models.ManagerDB).filter(models.ManagerDB.id == manager_id).first()
 
     if manager_model is None:
@@ -137,11 +137,10 @@ def update_book(manager_id: int, manager: Manager, db: Session = Depends(get_db)
             status_code=404,
             detail=f"ID {manager_id} : Does not exist"
         )
-    # create_book()
     manager_model.username = manager.username
     manager_model.first_name = manager.first_name
     manager_model.last_name = manager.last_name
-    # manager_model.email = manager.email
+    manager_model.email = manager.email
     manager_model.password = manager.password
     manager_model.created_at = manager.created_at
     manager_model.updated_at = manager.updated_at

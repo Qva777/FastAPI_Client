@@ -108,3 +108,4 @@ venv.bak/
 
 .idea/*
 /core/settings.txt
+/database.db

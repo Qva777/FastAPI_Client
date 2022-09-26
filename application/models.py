@@ -24,7 +24,7 @@ class ManagerDB(Base):
     username = Column(String, unique=True)
     first_name = Column(String)
     last_name = Column(String)
-    # email = Column(String, unique=True)
+    email = Column(String, unique=True)
     password = Column(String)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
