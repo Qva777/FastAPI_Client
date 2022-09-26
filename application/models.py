@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, sql
 from application.database import Base
 
 
@@ -10,8 +10,8 @@ class TaskDB(Base):
     name = Column(String, unique=True)
     description = Column(String)
     status = Column(Integer, ForeignKey('task.status'))
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
 
 
 class ManagerDB(Base):
@@ -19,13 +19,13 @@ class ManagerDB(Base):
     __tablename__ = 'manager'
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String)#, unique=True)
+    username = Column(String, unique=True)
     first_name = Column(String)
     last_name = Column(String)
-    email = Column(String, unique=True)
+    email = Column(String)
     password = Column(String)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
 
 # from datetime import datetime
 # from time import sleep

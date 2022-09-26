@@ -1,13 +1,15 @@
 from fastapi import FastAPI, HTTPException, Depends
+from pydantic import root_validator
 from application import models
 from application.schemas import Task, Manager
 from application.database import engine, SessionLocal
 from sqlalchemy.orm import Session
-
 from fastapi_pagination import Page, paginate, add_pagination
 
 app = FastAPI(title="FastAPI_Client")
 models.Base.metadata.create_all(bind=engine)
+
+from datetime import datetime
 
 
 def get_db():
@@ -33,7 +35,7 @@ async def get_task(task_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/api/create-task", tags=["POST Methods"])
-def create_task(task: Task, db: Session = Depends(get_db)):
+async def create_task(task: Task, db: Session = Depends(get_db)):
     task_model = models.TaskDB()
     task_model.name = task.name
     task_model.description = task.description
@@ -57,12 +59,26 @@ def update_task(task_id: int, task: Task, db: Session = Depends(get_db)):
             detail=f"ID {task_id} : Does not exist"
         )
 
+
+
     task_model.name = task.name
     task_model.description = task.description
     task_model.status = task.status
-    task_model.created_at = task.created_at
+    # task_model.created_at = task.created_at
     task_model.updated_at = task.updated_at
 
+    # @root_validator
+    # def number_validator(cls, values):
+    #     if values["updated_at"]:
+    #         values["updated_at"] = datetime.now()
+    #     else:
+    #         values["updated_at"] = values["created_at"]
+    #     return values
+    # @root_validator
+    # def number_validator(values):
+    #     values["updated_at"] = datetime.now()
+    #     return values
+    # task
     db.add(task_model)
     db.commit()
 

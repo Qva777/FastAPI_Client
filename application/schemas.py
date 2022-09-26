@@ -1,9 +1,10 @@
 from datetime import datetime
 from enum import Enum
-from typing import Union, List
+from typing import Union
 
+from click import DateTime
 from pydantic import BaseModel, root_validator, Field, EmailStr
-
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, sql
 
 class Status(int, Enum):
     """Стытусы задач"""
@@ -27,8 +28,18 @@ class Task(BaseModel):
 
     @root_validator
     def number_validator(cls, values):
-        values["updated_at"] = datetime.now()
+        if values["updated_at"]:
+            values["updated_at"] = datetime.now()
+        else:
+            values["updated_at"] = values["created_at"]
         return values
+
+
+
+    # @root_validator
+    # def number_validator(cls, values):
+    #     values["updated_at"] = datetime.now()
+    #     return values
 
 
 class Manager(BaseModel):
@@ -52,3 +63,4 @@ class Manager(BaseModel):
         """Валидация обновлений"""
         values["updated_at"] = datetime.now()
         return values
+
