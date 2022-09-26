@@ -4,7 +4,7 @@ from application.schemas import Task, Manager
 from application.database import engine, SessionLocal
 from sqlalchemy.orm import Session
 
-from fastapi_pagination import Page, paginate, LimitOffsetPage, add_pagination
+from fastapi_pagination import Page, paginate, add_pagination
 
 app = FastAPI(title="FastAPI_Client")
 models.Base.metadata.create_all(bind=engine)
@@ -20,7 +20,6 @@ def get_db():
 
 # TASK URL
 @app.get('/api/all-tasks/', response_model=Page[Task], tags=["GET Methods"])
-@app.get('/api/limit-offset', response_model=LimitOffsetPage[Task])
 async def get_all_tasks(db: Session = Depends(get_db)):
     return paginate(db.query(models.TaskDB).all())
 
@@ -101,9 +100,12 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
 # return task_model
 
 # Manager URL
-@app.get('/api/all-managers/', tags=["GET Methods"])
+@app.get('/api/all-managers/', response_model=Page[Manager], tags=["GET Methods"])
 async def get_all_managers(db: Session = Depends(get_db)):
-    return db.query(models.ManagerDB).all()
+    return paginate(db.query(models.ManagerDB).all())
+
+
+add_pagination(app)
 
 
 @app.get('/api/manager/{manager_id}', tags=["GET Methods"])

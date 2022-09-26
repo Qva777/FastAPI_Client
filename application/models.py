@@ -1,6 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Enum
-from sqlalchemy.orm import relationship
-
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from application.database import Base
 
 
@@ -21,7 +19,7 @@ class ManagerDB(Base):
     __tablename__ = 'manager'
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True)
+    username = Column(String)#, unique=True)
     first_name = Column(String)
     last_name = Column(String)
     email = Column(String, unique=True)
