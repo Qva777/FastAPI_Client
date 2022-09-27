@@ -1,6 +1,12 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, sql
-from application.database import Base
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, sql, Table
+from sqlalchemy.orm import relationship############
 
+from application.database import Base, engine###########
+
+#
+# task_manager = Table("task_manager", Base.metadata,
+#                        Column("task_id", ForeignKey("task.id"), primary_key=True),
+#                        Column("manager_id", ForeignKey("manager.id"), primary_key=True))
 
 class TaskDB(Base):
     """Таблица моделей задач в базе данных"""
@@ -12,6 +18,8 @@ class TaskDB(Base):
     status = Column(Integer, ForeignKey('task.status'))
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
+
+    # managers = relationship("ManagerDB", secondary=task_manager, back_populates="tasks")
 
 
 class ManagerDB(Base):
@@ -26,6 +34,17 @@ class ManagerDB(Base):
     password = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
+
+    # tasks = relationship("TaskDB", secondary=task_manager, back_populates="managers")
+
+
+Base.metadata.create_all(engine)###
+
+
+
+
+
+
 
 # from datetime import datetime
 # from time import sleep
