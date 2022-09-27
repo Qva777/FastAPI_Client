@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import root_validator
 from application import models
-from application.schemas import Task, Manager
+from application.schemas import Task, Manager#, TaskOut
 from application.database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from fastapi_pagination import Page, paginate, add_pagination
@@ -35,13 +35,15 @@ async def get_task(task_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/api/create-task", tags=["POST Methods"])
-async def create_task(task: Task, db: Session = Depends(get_db)):
+async def create_task(task: Task,  db: Session = Depends(get_db)):
     task_model = models.TaskDB()
     task_model.name = task.name
     task_model.description = task.description
     task_model.status = task.status
     task_model.created_at = task.created_at
     task_model.updated_at = task.updated_at
+
+    # task_model.managers = task.manager
 
     db.add(task_model)
     db.commit()
@@ -52,33 +54,19 @@ async def create_task(task: Task, db: Session = Depends(get_db)):
 @app.put("/api/task/{task_id}", tags=["PUT Methods"])
 def update_task(task_id: int, task: Task, db: Session = Depends(get_db)):
     task_model = db.query(models.TaskDB).filter(models.TaskDB.id == task_id).first()
-
     if task_model is None:
         raise HTTPException(
             status_code=404,
             detail=f"ID {task_id} : Does not exist"
         )
 
-
-
     task_model.name = task.name
     task_model.description = task.description
     task_model.status = task.status
     # task_model.created_at = task.created_at
     task_model.updated_at = task.updated_at
+    # task_model.managers = managerss.managers
 
-    # @root_validator
-    # def number_validator(cls, values):
-    #     if values["updated_at"]:
-    #         values["updated_at"] = datetime.now()
-    #     else:
-    #         values["updated_at"] = values["created_at"]
-    #     return values
-    # @root_validator
-    # def number_validator(values):
-    #     values["updated_at"] = datetime.now()
-    #     return values
-    # task
     db.add(task_model)
     db.commit()
 
