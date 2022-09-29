@@ -1,8 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Union, List
-
-from uuid import UUID
+from typing import Union
 from pydantic import BaseModel, root_validator, Field, EmailStr
 
 
@@ -12,9 +10,9 @@ class Status(int, Enum):
     IN_PROGRESS = 2
     COMPLETED = 3
 
+
 class Manager(BaseModel):
     """Шаблон модели менеджера"""
-    # id: int
     username: Union[str, None] = Field(..., title="Username", max_length=64)
     first_name: Union[str, None] = Field(..., title="First name", max_length=250)
     last_name: Union[str, None] = Field(..., title="Last name", max_length=250)
@@ -22,7 +20,6 @@ class Manager(BaseModel):
     password: Union[str, None] = Field(..., title="Password", max_length=250)
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
-
 
     class Config:
         """Предоставления конфигураций"""
@@ -38,12 +35,12 @@ class Manager(BaseModel):
 
 class Task(BaseModel):
     """Шаблон модели задач"""
-    # id: int
     name: Union[str, None] = Field(..., title="The name of the task", max_length=64)
     description: Union[str, None] = Field(..., title="The description of the task", max_length=250)
     status: Union[Status] = Field(..., title="The description of the task")
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
+
     # manager: List[Manager]
     class Config:
         """Предоставления конфигураций"""
@@ -64,8 +61,9 @@ class Task(BaseModel):
     #     return values
 
 
-
-#
+# class LoginManager(BaseModel):
+    # username: Manager.username
+    # password: Manager.password
 # class TaskOut(BaseModel):
 #     manager_id: Manager
 #

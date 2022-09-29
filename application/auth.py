@@ -4,6 +4,8 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 
+from application.models import ManagerDB
+
 
 class AuthHandler():
     """Обработчик аутетификации"""
@@ -18,6 +20,8 @@ class AuthHandler():
     def verify_password(self, plain_password, hashed_password):
         """Верификация пароля"""
         return self.pwd_context.verify(plain_password, hashed_password)
+
+
 
     def encode_token(self, user_id):
         """Кодировка токена и время истечения"""
