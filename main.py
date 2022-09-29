@@ -1,16 +1,23 @@
-from fastapi import FastAPI, HTTPException, Depends
-from application import models
-from application.schemas import Task, Manager#, TaskOut
-from application.database import engine, SessionLocal
-from sqlalchemy.orm import Session
-from fastapi_pagination import Page, paginate, add_pagination
+from datetime import timedelta, datetime
 
+import jwt
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi_pagination import Page, paginate, add_pagination
+from starlette import status
+from typesystem import Union
+
+from application import models
+from application.models import ManagerDB
+from application.schemas import Task, Manager
+from application.database import engine, SessionLocal
 from application.auth import AuthHandler
+
+from sqlalchemy.orm import Session
 
 app = FastAPI(title="FastAPI_Client")
 models.Base.metadata.create_all(bind=engine)
-
 auth_handler = AuthHandler()
+
 
 def get_db():
     try:
@@ -20,34 +27,38 @@ def get_db():
         db.close()
 
 
-users=[]
-
+users = []
 
 
 #####Auth jwt
 @app.post('/register', status_code=201)
-def register(auth_details: Manager):
+def register(auth_details: Manager, db: Session = Depends(get_db)):
     if any(x['username'] == auth_details.username for x in users):
         raise HTTPException(status_code=400, detail='Username is taken')
     hashed_password = auth_handler.get_password_hash(auth_details.password)
-    users.append({
-        'username': auth_details.username,
-        'password': hashed_password
-    })
-    return
+    # users.append({
+    #     'username': auth_details.username,
+    #     'password': hashed_password
+    # })
+    manager_model = models.ManagerDB()
+    manager_model.username = auth_details.username
+    manager_model.first_name = auth_details.first_name
+    manager_model.last_name = auth_details.last_name
+    # manager_model.email = manager.email
+    manager_model.password = hashed_password
+    manager_model.created_at = auth_details.created_at
+    manager_model.updated_at = auth_details.updated_at
+
+    db.add(manager_model)
+    db.commit()
+    return auth_details
+
 
 
 @app.post('/login')
-def login(auth_details: Manager):
-    user = None
-    for x in users:
-        if x['username'] == auth_details.username:
-            user = x
-            break
-
-    if (user is None) or (not auth_handler.verify_password(auth_details.password, user['password'])):
-        raise HTTPException(status_code=401, detail='Invalid username and/or password')
-    token = auth_handler.encode_token(user['username'])
+def login(auth_details: Manager, db: Session = Depends(get_db)):
+    user = auth_details.username, auth_details.password
+    token = auth_handler.encode_token(user)
     return {'token': token}
 
 
@@ -59,16 +70,6 @@ def unprotected():
 @app.get('/protected')
 def protected(username=Depends(auth_handler.auth_wrapper)):
     return {'name': username}
-
-
-
-
-
-
-
-
-
-
 
 
 # TASK URL
@@ -86,7 +87,7 @@ async def get_task(task_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/api/create-task", tags=["POST Methods"])
-async def create_task(task: Task,  db: Session = Depends(get_db)):
+async def create_task(task: Task, db: Session = Depends(get_db)):
     task_model = models.TaskDB()
     task_model.name = task.name
     task_model.description = task.description
