@@ -6,19 +6,23 @@ from datetime import datetime, timedelta
 
 
 class AuthHandler():
+    """Обработчик аутетификации"""
     security = HTTPBearer()
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
     secret = 'SECRET'
 
     def get_password_hash(self, password):
+        """Получение значений хешированого пароля"""
         return self.pwd_context.hash(password)
 
     def verify_password(self, plain_password, hashed_password):
+        """Верификация пароля"""
         return self.pwd_context.verify(plain_password, hashed_password)
 
     def encode_token(self, user_id):
+        """Кодировка токена и время истечения"""
         payload = {
-            'exp': datetime.utcnow() + timedelta(days=0, minutes=5),
+            'exp': datetime.utcnow() + timedelta(days=0, minutes=30),
             'iat': datetime.utcnow(),
             'sub': user_id
         }
@@ -29,6 +33,7 @@ class AuthHandler():
         )
 
     def decode_token(self, token):
+        """Декодирование токена/вывод ошибки 401"""
         try:
             payload = jwt.decode(token, self.secret, algorithms=['HS256'])
             return payload['sub']
@@ -38,4 +43,5 @@ class AuthHandler():
             raise HTTPException(status_code=401, detail='Invalid token')
 
     def auth_wrapper(self, auth: HTTPAuthorizationCredentials = Security(security)):
+        """Оболочка зависимостей/гарантирует что токен есть в запросе"""
         return self.decode_token(auth.credentials)
