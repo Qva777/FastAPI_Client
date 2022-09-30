@@ -3,16 +3,29 @@ from datetime import timedelta, datetime
 import jwt
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi_pagination import Page, paginate, add_pagination
+from fastapi_permissions.example import Permission, get_current_user
+from pydantic import BaseModel
 from starlette import status
 from typesystem import Union
 
 from application import models
 from application.models import ManagerDB
-from application.schemas import Task, Manager
+from application.schemas import Task, Manager, ItemListResource
 from application.database import engine, SessionLocal
 from application.auth import AuthHandler
 
 from sqlalchemy.orm import Session
+#########################
+from fastapi_permissions import (
+    Allow,
+    Authenticated,
+    Deny,
+    Everyone,
+    configure_permissions,
+    list_permissions,
+)
+
+
 
 app = FastAPI(title="FastAPI_Client")
 models.Base.metadata.create_all(bind=engine)
@@ -62,21 +75,23 @@ def login(auth_details: Manager, db: Session = Depends(get_db)):
     return {'token': token}
 
 
-@app.get('/unprotected')
-def unprotected():
-    return {'hello': 'world'}
+# @app.get('/unprotected')
+# def unprotected():
+#     return {'hello': 'world'}
 
 
 @app.get('/protected')
 def protected(username=Depends(auth_handler.auth_wrapper)):
     return {'name': username}
 
-
 # TASK URL
-@app.get('/api/all-tasks/', response_model=Page[Task], tags=["GET Methods"])
-async def get_all_tasks(db: Session = Depends(get_db)):
-    return paginate(db.query(models.TaskDB).all())
 
+
+
+
+@app.get('/api/all-tasks/', response_model=Page[Task], tags=["GET Methods"])
+async def get_all_tasks( db: Session = Depends(get_db)): #ilr: ItemListResource = Permission("view", ItemListResource),
+    return paginate(db.query(models.TaskDB).all())
 
 add_pagination(app)
 
