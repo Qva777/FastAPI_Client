@@ -1,7 +1,7 @@
+from typing import List
+
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, sql, Enum
 from sqlalchemy.orm import relationship
-
-from .schemas import Roles
 from application.database import Base, engine
 
 
@@ -29,14 +29,14 @@ class ManagerDB(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True)
-    first_name = Column(String)
-    last_name = Column(String)
+    # first_name = Column(String)
+    full_name = Column(String)
     email = Column(String)
-    password = Column(String)
-    created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
+    hashed_password = Column(String)
+    principals: List[str] = []
+    # created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
+    # updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     # is_active = Column(Boolean, default=False)
-    role = Column(Enum(Roles), default="user")
     # tasks = relationship("TaskDB", secondary=task_manager, back_populates="managers")
 
 
