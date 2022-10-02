@@ -9,7 +9,7 @@ from starlette import status
 from typesystem import Union
 
 from application import models
-from application.models import ManagerDB# 222222222222222
+from application.models import ManagerDB  # 222222222222222
 from application.schemas import Task, Manager, ItemListResource, ManagerInDB, Item, Token
 from application.database import engine, SessionLocal
 from application.auth import AuthHandler
@@ -39,8 +39,6 @@ from fastapi_permissions import (
 ###############################################################2
 
 
-
-
 app = FastAPI(title="FastAPI_Client")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 models.Base.metadata.create_all(bind=engine)
@@ -60,6 +58,7 @@ def get_db():
     finally:
         db.close()
 
+
 # ManagerDB = {
 # "bob": {
 #         "username": "bob",
@@ -74,12 +73,13 @@ def get_db():
 
 
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+    return plain_password == hashed_password
 
 
-def get_user(manager_id: int,  db: Session = Depends(get_db)):
-    manager_model = db.query(models.ManagerDB).filter(models.ManagerDB.id == manager_id).first()
-    return manager_model
+def get_user(db, username: str):
+    if db.username == username:
+        print("user---", username)
+    return ManagerDB
 
 
 def get_item(item_id: int):
@@ -89,7 +89,8 @@ def get_item(item_id: int):
 
 
 def authenticate_user(db, username: str, password: str):
-    user = get_user(db)
+    # user = get_user(db, username)
+    user = db.query(models.ManagerDB).filter(models.ManagerDB.username == username).first()
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -124,10 +125,10 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return user
 
 
-fake_items_db = {
-    1: {"name": "Stilton", "owner": "bob"},
-    2: {"name": "Danish Blue", "owner": "alice"},
-}
+# fake_items_db = {
+#     1: {"name": "Stilton", "owner": "bob"},
+#     2: {"name": "Danish Blue", "owner": "alice"},
+# }
 def get_active_principals(user: Manager = Depends(get_current_user)):
     if user:
         # user is logged in
@@ -138,22 +139,24 @@ def get_active_principals(user: Manager = Depends(get_current_user)):
         principals = [Everyone]
     return principals
 
+
 Permission = configure_permissions(get_active_principals)
 
 
 @app.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),):
-    user = authenticate_user(ManagerDB, form_data.username, form_data.password)
-    if not user:
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    success = authenticate_user(db, form_data.username, form_data.password)
+    if not success:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": ManagerDB.username}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": form_data.username}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @app.get("/me/", response_model=Manager)
-async def read_users_me(current_user: ManagerDB = Depends(get_current_user)):
+async def read_users_me(current_user: Manager = Depends(get_current_user)):
     return current_user
+
 
 # 22222222222222222222222222222222222222222222
 # 22222222222222222222222222222222222222222222
@@ -285,12 +288,13 @@ async def read_users_me(current_user: ManagerDB = Depends(get_current_user)):
 # # return task_model
 #
 # # Manager URL
-@app.get('/api/all-managers/', response_model=Page[Manager], tags=["GET Methods"])
+@app.get('/api/all-managers/', response_model=Page[ManagerInDB], tags=["GET Methods"])
 async def get_all_managers(db: Session = Depends(get_db)):
     return paginate(db.query(models.ManagerDB).all())
 
 
 add_pagination(app)
+
 
 #
 # @app.get('/api/manager/{manager_id}', tags=["GET Methods"])
@@ -305,7 +309,6 @@ def create_manager(manager: ManagerInDB, db: Session = Depends(get_db)):
     manager_model.email = manager.email
     manager_model.hashed_password = manager.hashed_password
     manager_model.full_name = manager.full_name
-
 
     # manager_model.first_name = manager.first_name
     # manager_model.last_name = manager.last_name
