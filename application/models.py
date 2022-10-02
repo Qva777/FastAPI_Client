@@ -8,6 +8,8 @@ from application.database import Base, engine
 # task_manager = Table("task_manager", Base.metadata,
 #                        Column("task_id", ForeignKey("task.id"), primary_key=True),
 #                        Column("manager_id", ForeignKey("manager.id"), primary_key=True))
+from application.schemas import Manager
+
 
 class TaskDB(Base):
     """Таблица моделей задач в базе данных"""
@@ -32,7 +34,7 @@ class ManagerDB(Base):
     # first_name = Column(String)
     full_name = Column(String)
     email = Column(String)
-    hashed_password = Column(String)
+    hashed_password =Column(String)
     principals: List[str] = []
     # created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     # updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
