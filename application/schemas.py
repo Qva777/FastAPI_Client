@@ -1,6 +1,8 @@
 from datetime import datetime
 from enum import Enum
 from typing import Union, List
+
+
 from pydantic import BaseModel, root_validator, Field, EmailStr
 
 ##############
@@ -23,12 +25,15 @@ from fastapi_permissions import (
     configure_permissions,
     list_permissions,
 )
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 ################
 class Status(int, Enum):
     """Стытусы задач"""
     CREATED = 1
     IN_PROGRESS = 2
     COMPLETED = 3
+
 
 class Manager(BaseModel):
     """Шаблон модели менеджера"""
