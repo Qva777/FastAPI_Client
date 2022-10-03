@@ -106,7 +106,7 @@ def create_access_token(*, data: dict, expires_delta: timedelta):
     return encoded_jwt
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -119,7 +119,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except (PyJWTError, ValidationError):
         raise credentials_exception
-    user = get_user(ManagerDB)
+    user = db.query(models.ManagerDB).filter(models.ManagerDB.username == username).first()
     if user is None:
         raise credentials_exception
     return user
@@ -288,74 +288,72 @@ async def read_users_me(current_user: Manager = Depends(get_current_user)):
 # # return task_model
 #
 # # Manager URL
-@app.get('/api/all-managers/', response_model=Page[ManagerInDB], tags=["GET Methods"])
-async def get_all_managers(db: Session = Depends(get_db)):
-    return paginate(db.query(models.ManagerDB).all())
+
 
 
 add_pagination(app)
 
 
-#
-# @app.get('/api/manager/{manager_id}', tags=["GET Methods"])
-# async def get_manager(manager_id: int, db: Session = Depends(get_db)):
-#     return db.query(models.ManagerDB).filter(models.ManagerDB.id == manager_id).first()
-#
-#
-@app.post("/api/create-manager", tags=["POST Methods"])
-def create_manager(manager: ManagerInDB, db: Session = Depends(get_db)):
-    manager_model = models.ManagerDB()
-    manager_model.username = manager.username
-    manager_model.email = manager.email
-    manager_model.hashed_password = manager.hashed_password
-    manager_model.full_name = manager.full_name
+def search_manager_by_username(username, db):
+    """ Search manager by username """
+    manager_model = db.query(models.ManagerDB).filter(models.ManagerDB.username == username).first()
 
-    # manager_model.first_name = manager.first_name
-    # manager_model.last_name = manager.last_name
-    # manager_model.email = manager.email
-    # manager_model.password = manager.password
-    # manager_model.created_at = manager.created_at
-    # manager_model.updated_at = manager.updated_at
+    if manager_model is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"User {username} : Does not exist"
+        )
+    return manager_model
+
+
+def save_info_manager(manager_model, manager, db):
+    """ Fields that are stored in the manager table in the database """
+    manager_model.username = manager.username
+    manager_model.hashed_password = manager.hashed_password  # pwd_context.hash(manager.hashed_password)
+
+    manager_model.first_name = manager.first_name
+    manager_model.last_name = manager.last_name
+    manager_model.email = manager.email
+    manager_model.created_at = manager.created_at
+    manager_model.updated_at = manager.updated_at
 
     db.add(manager_model)
     db.commit()
 
+
+@app.post("/api/create-manager", tags=["POST Methods"])
+async def create_manager(manager: ManagerInDB, db: Session = Depends(get_db)):
+    """ Create user """
+    manager_model = models.ManagerDB()
+    save_info_manager(manager_model, manager, db)
     return manager
-#
-#
-# @app.put("/api/manager/{manager_id}", tags=["PUT Methods"])
-# def update_manager(manager_id: int, manager: Manager, db: Session = Depends(get_db)):
-#     manager_model = db.query(models.ManagerDB).filter(models.ManagerDB.id == manager_id).first()
-#
-#     if manager_model is None:
-#         raise HTTPException(
-#             status_code=404,
-#             detail=f"ID {manager_id} : Does not exist"
-#         )
-#     manager_model.username = manager.username
-#     manager_model.first_name = manager.first_name
-#     manager_model.last_name = manager.last_name
-#     manager_model.email = manager.email
-#     manager_model.password = manager.password
-#     manager_model.created_at = manager.created_at
-#     manager_model.updated_at = manager.updated_at
-#
-#     db.add(manager_model)
-#     db.commit()
-#
-#     return manager
-#
-#
-# @app.delete("/api/manager/{manager_id}", tags=["DELETE Methods"])
-# def delete_manager(manager_id: int, db: Session = Depends(get_db)):
-#     manager_model = db.query(models.ManagerDB).filter(models.ManagerDB.id == manager_id).first()
-#
-#     if manager_model is None:
-#         raise HTTPException(
-#             status_code=404,
-#             detail=f"ID {manager_id} : Does not exist"
-#         )
-#
-#     db.query(models.ManagerDB).filter(models.ManagerDB.id == manager_id).delete()
-#
-#     db.commit()
+
+
+@app.get('/api/manager/{manager_username}', tags=["GET Methods"])
+async def get_manager(username: str, db: Session = Depends(get_db),
+                      lr: ItemListResource = Permission("view", ItemListResource)):
+    """ Get info user by username """
+    return db.query(models.ManagerDB).filter(models.ManagerDB.username == username).first()
+
+
+@app.put("/api/manager/{manager_username}", tags=["PUT Methods"])
+async def update_manager(username: str, manager: ManagerInDB, db: Session = Depends(get_db),
+                   lr: ItemListResource = Permission("view", ItemListResource)):
+    """ Update info user """
+    save_info_manager(search_manager_by_username(username, db), manager, db)
+    return manager
+
+
+@app.delete("/api/manager/{manager_username}", tags=["DELETE Methods"])
+async def delete_manager(username: str, db: Session = Depends(get_db),
+                   lr: ItemListResource = Permission("view", ItemListResource)):
+    """ Delete user by username """
+    search_manager_by_username(username, db)
+    db.query(models.ManagerDB).filter(models.ManagerDB.username == username).delete()
+    db.commit()
+    return "Object removed"
+
+
+@app.get('/api/all-managers/', response_model=Page[ManagerInDB], tags=["GET Methods"])
+async def get_all_managers(db: Session = Depends(get_db)):
+    return paginate(db.query(models.ManagerDB).all())

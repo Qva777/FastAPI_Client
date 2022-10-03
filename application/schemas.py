@@ -38,17 +38,13 @@ class Status(int, Enum):
 class Manager(BaseModel):
     """Шаблон модели менеджера"""
     username: Union[str, None] = Field(..., title="Username", max_length=64)
-    email: str = None
-    full_name: str = None
+    first_name: Union[str, None] = Field(..., title="First name", max_length=250)
+    last_name: Union[str, None] = Field(..., title="Last name", max_length=250)
+    email: Union[EmailStr, None] = Field(..., title="Email", )############
+    created_at: datetime = datetime.now()
+    updated_at: datetime = datetime.now()
     principals: List[str] = []
-    #################222222
-    # first_name: Union[str, None] = Field(..., title="First name", max_length=250)
-    # last_name: Union[str, None] = Field(..., title="Last name", max_length=250)
-    # email: Union[EmailStr, None] = Field(..., title="Email", )  #############
-    # password: Union[str, None] = Field(..., title="Password", max_length=250)
-    # created_at: datetime = datetime.now()
-    # updated_at: datetime = datetime.now()
-    #######22222222
+
     class Config:
         """Предоставления конфигураций"""
         validate_assignment = True
@@ -59,6 +55,7 @@ class Manager(BaseModel):
         """Валидация обновлений"""
         values["updated_at"] = datetime.now()
         return values
+
 
 class ManagerInDB(Manager):
     hashed_password: str
