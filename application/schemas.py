@@ -20,14 +20,10 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 from fastapi_permissions import (
     Allow,
     Authenticated,
-    Deny,
-    Everyone,
-    configure_permissions,
-    list_permissions,
 )
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-################
+
 class Status(int, Enum):
     """Стытусы задач"""
     CREATED = 1
@@ -89,7 +85,7 @@ class Task(BaseModel):
     #     values["updated_at"] = datetime.now()
     #     return values
 
-###############################2
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -98,27 +94,26 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: str = None
 
+#delete
+# class Item(BaseModel):
+#     name: str
+#     owner: str
+#
+#     def __acl__(self):
+#         """ defines who can do what to the model instance
+#         the function returns a list containing tuples in the form of
+#         (Allow or Deny, principal identifier, permission name)
+#         If a role is not listed (like "role:user") the access will be
+#         automatically deny. It's like a (Deny, Everyone, All) is automatically
+#         appended at the end.
+#         """
+#         return [
+#             (Allow, Authenticated, "view"),
+#             (Allow, "role:admin", "use"),
+#             (Allow, f"user:{self.owner}", "use"),
+#         ]
+#
 
-class Item(BaseModel):
-    name: str
-    owner: str
-
-    def __acl__(self):
-        """ defines who can do what to the model instance
-        the function returns a list containing tuples in the form of
-        (Allow or Deny, principal identifier, permission name)
-        If a role is not listed (like "role:user") the access will be
-        automatically deny. It's like a (Deny, Everyone, All) is automatically
-        appended at the end.
-        """
-        return [
-            (Allow, Authenticated, "view"),
-            (Allow, "role:admin", "use"),
-            (Allow, f"user:{self.owner}", "use"),
-        ]
 
 class ItemListResource:
     __acl__ = [(Allow, Authenticated, "view")]
-
-# NewItemAcl = [(Deny, "user:bob", "create"), (Allow, Authenticated, "create")]
-###############################2
