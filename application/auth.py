@@ -41,10 +41,10 @@ def get_user(db, username: str):
     return ManagerDB
 
 
-def get_item(item_id: int):
-    if item_id in ManagerDB:  ### manager - fake_items_db
-        item_dict = ManagerDB[item_id]  ### manager - fake_items_db
-        return Item(**item_dict)
+# def get_item(item_id: int):
+#     if item_id in ManagerDB:  ### manager - fake_items_db
+#         item_dict = ManagerDB[item_id]  ### manager - fake_items_db
+#         return Item(**item_dict)
 
 
 def authenticate_user(db, username: str, password: str):
