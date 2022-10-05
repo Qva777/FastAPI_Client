@@ -79,14 +79,14 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 # TASK URL
 @app.get('/api/all-tasks/', response_model=Page[Task], tags=["GET Methods"])
-async def get_all_tasks( db: Session = Depends(get_db)): #ilr: ItemListResource = Permission("view", ItemListResource),
+async def get_all_tasks( db: Session = Depends(get_db)):
     return paginate(db.query(models.TaskDB).all())
 
 add_pagination(app)
 
 
 @app.get('/api/task/{task_id}', tags=["GET Methods"])
-async def get_task(task_id: int, db: Session = Depends(get_db)):
+async def get_task(task_id: int, db: Session = Depends(get_db), ilr: ItemListResource = Permission("view", ItemListResource)):
     return db.query(models.TaskDB).filter(models.TaskDB.id == task_id).first()
 
 
