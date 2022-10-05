@@ -108,7 +108,7 @@ async def create_task(task: Task, db: Session = Depends(get_db)):
 
 
 @app.put("/api/task/{task_id}", tags=["PUT Methods"])
-def update_task(task_id: int, task: Task, db: Session = Depends(get_db)):
+def update_task(task_id: int, task: Task, db: Session = Depends(get_db),ilr: ItemListResource = Permission("view", ItemListResource)):
     task_model = db.query(models.TaskDB).filter(models.TaskDB.id == task_id).first()
     if task_model is None:
         raise HTTPException(
@@ -130,7 +130,7 @@ def update_task(task_id: int, task: Task, db: Session = Depends(get_db)):
 
 
 @app.delete("/api/task/{task_id}", tags=["DELETE Methods"])
-def delete_task(task_id: int, db: Session = Depends(get_db)):
+def delete_task(task_id: int, db: Session = Depends(get_db), ilr: ItemListResource = Permission("view", ItemListResource)):
     task_model = db.query(models.TaskDB).filter(models.TaskDB.id == task_id).first()
 
     if task_model is None:
