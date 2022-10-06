@@ -9,7 +9,7 @@ def search_manager_by_username(username, db):
     if manager_model is None:
         raise HTTPException(
             status_code=404,
-            detail=f"User {username} : Does not exist"
+            detail=f"{username} : Does not exist"
         )
     return manager_model
 
