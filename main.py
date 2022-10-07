@@ -1,25 +1,22 @@
-from fastapi_pagination import Page, paginate, add_pagination
-from application import models
-from application.auth import get_active_principals, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, \
-    create_access_token, oauth2_scheme, SECRET_KEY, ALGORITHM
-from application.manager_methods import save_info_manager, search_manager_by_username
-from application.schemas import Task, Manager, ManagerInDB, Token, ItemListResource
-from application.database import engine, SessionLocal
+""" some text....  """
 
+from jwt import PyJWTError
 from sqlalchemy.orm import Session
 
-from datetime import timedelta
-
-import jwt
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException
+from fastapi_pagination import Page, paginate, add_pagination
+from fastapi_permissions import configure_permissions
 from fastapi.security import OAuth2PasswordRequestForm
-from jwt import PyJWTError
+
 from pydantic import ValidationError
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from fastapi_permissions import configure_permissions
-
-from application.task_methods import search_task_by_name, save_info_task
+from application.task_methods import save_info_task, search_task_by_name
+from application.manager_methods import save_info_manager, search_manager_by_username
+from application.auth import *
+from application.schemas import *
+from application.database import engine, SessionLocal
+from application import models
 
 app = FastAPI(title="FastAPI_Client")
 models.Base.metadata.create_all(bind=engine)
@@ -101,34 +98,18 @@ async def create_task(task: Task, db: Session = Depends(get_db)):
     return task
 
 
-# @app.put("/api/task/{task_id}", tags=["PUT Methods"])
-# def update_task(name: str, task: Task, db: Session = Depends(get_db),
-#                 ilr: ItemListResource = Permission("view", ItemListResource)):
-#     task_model = db.query(models.TaskDB).filter(models.TaskDB.name == name).first()
-#     if task_model is None:
-#         raise HTTPException(
-#             status_code=404,
-#             detail=f"Task {name} : Does not exist"
-#         )
-#
-#     task_model.name = task.name
-#     task_model.description = task.description
-#     task_model.status = task.status
-#     # task_model.created_at = task.created_at
-#     task_model.updated_at = task.updated_at
-#     # task_model.managers = managerss.managers
-#
-#     db.add(task_model)
-#     db.commit()
-#
-#     return task
+@app.put("/api/task/{task_id}", tags=["PUT Methods"])
+def update_task(name: str, task: Task, db: Session = Depends(get_db),
+                ilr: ItemListResource = Permission("view", ItemListResource)):
+    save_info_task(search_task_by_name(name, db), task, db)
+    return task
 
 
 @app.delete("/api/task/{task_id}", tags=["DELETE Methods"])
-def delete_task(name: int, db: Session = Depends(get_db),
+def delete_task(name: str, db: Session = Depends(get_db),
                 ilr: ItemListResource = Permission("view", ItemListResource)):
     """ Delete task by name """
-    search_manager_by_username(name, db)
+    search_task_by_name(name, db)
     db.query(models.TaskDB).filter(models.TaskDB.name == name).delete()
     db.commit()
 
