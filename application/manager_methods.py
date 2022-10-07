@@ -1,3 +1,5 @@
+"""File that stores functions for working with the manager """
+
 from fastapi import HTTPException
 from application import models
 
