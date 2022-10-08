@@ -1,8 +1,13 @@
 """ Main file with URL/Methods  """
+from fastapi import FastAPI
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi_pagination import Page, paginate, add_pagination
 
 from application.auth import *
+from application.manager_methods import save_info_manager, search_manager_by_username
 from application.schemas import *
 from application import models
+from application.task_methods import save_info_task, search_task_by_name
 
 app = FastAPI(title="FastAPI_Client")
 
