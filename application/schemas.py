@@ -8,7 +8,7 @@ from pydantic import BaseModel, root_validator, Field, EmailStr
 from fastapi_permissions import Allow, Authenticated
 from passlib.context import CryptContext
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class Status(int, Enum):
