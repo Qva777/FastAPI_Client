@@ -24,5 +24,21 @@ def save_info_task(task_model, task, db):
     task_model.created_at = task.created_at
     task_model.updated_at = task.updated_at
 
+    # task_model.managers = task.managers
+
     db.add(task_model)
     db.commit()
+
+
+def save_info_task_manager(task_manager, task, db):
+    """ Fields that are stored in the task table in the database """
+    for manager in task.managers:
+
+        task_manager.name = task.name
+        task_manager.username = manager
+        db.add(task_manager)
+        db.commit()
+
+    # task_model.managers = task.managers
+
+
