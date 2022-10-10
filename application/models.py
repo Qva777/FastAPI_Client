@@ -1,13 +1,15 @@
 """ File of models stored in the database """
 
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, sql
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, sql, Table
+# from sqlalchemy.orm import relationship
+
 from application.database import Base, engine
 from typing import List
 
-# task_manager = Table("task_manager", Base.metadata,
-#                        Column("task_id", ForeignKey("task.id"), primary_key=True),
-#                        Column("manager_id", ForeignKey("manager.id"), primary_key=True))
-from application.schemas import Manager
+
+task_manager = Table("task_manager", Base.metadata,
+                     Column("task_name", ForeignKey("task.name"), primary_key=True),
+                     Column("manager_username", ForeignKey("manager.username"), primary_key=True))
 
 
 class TaskDB(Base):
@@ -21,7 +23,7 @@ class TaskDB(Base):
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
 
-    # managers = relationship("ManagerDB", secondary=task_manager, back_populates="tasks")
+    # managers = relationship("Manager", secondary=task_manager, back_populates="manager")
 
 
 class ManagerDB(Base):
@@ -37,8 +39,7 @@ class ManagerDB(Base):
     principals: List[str] = []
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
-    # is_active = Column(Boolean, default=False)
-    # tasks = relationship("TaskDB", secondary=task_manager, back_populates="managers")
+    # tasks = relationship("Task", secondary=task_manager, back_populates="task")
 
 
 Base.metadata.create_all(engine)
