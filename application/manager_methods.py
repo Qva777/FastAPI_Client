@@ -20,7 +20,7 @@ def search_manager_by_username(username, db):
 def save_info_manager(manager_model, manager, db):
     """ Fields that are stored in the manager table in the database """
     manager_model.username = manager.username
-    manager_model.hashed_password = pwd_context.hash(manager.hashed_password)  # pwd_context.hash(manager.hashed_password)
+    manager_model.hashed_password = pwd_context.hash(manager.hashed_password)
 
     manager_model.first_name = manager.first_name
     manager_model.last_name = manager.last_name
@@ -28,5 +28,7 @@ def save_info_manager(manager_model, manager, db):
     manager_model.created_at = manager.created_at
     manager_model.updated_at = manager.updated_at
 
+    # manager_model.tasks = manager.tasks
     db.add(manager_model)
     db.commit()
+
