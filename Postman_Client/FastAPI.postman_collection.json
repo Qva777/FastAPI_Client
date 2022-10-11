@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "e670edb1-6cb6-476a-9bc4-7b78b2fbdb48",
+		"name": "FastAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22355480"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/api/create-manager/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"boob\",\r\n  \"first_name\": \"string\",\r\n  \"last_name\": \"string\",\r\n  \"email\": \"user@example.com\",\r\n  \"created_at\": \"2022-10-11T20:55:10.020227\",\r\n  \"updated_at\": \"2022-10-11T20:55:10.020227\",\r\n  \"hashed_password\": \"string\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/create-manager/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"create-manager",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
