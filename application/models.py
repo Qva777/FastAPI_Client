@@ -7,9 +7,9 @@ from application.database import Base, engine
 from typing import List
 
 
-task_manager = Table("task_manager", Base.metadata,
-                     Column("task_name", ForeignKey("task.name"), primary_key=True),
-                     Column("manager_username", ForeignKey("manager.username"), primary_key=True))
+# task_manager = Table("task_manager", Base.metadata,
+#                      Column("task_name", ForeignKey("task.name"), primary_key=True),
+#                      Column("manager_username", ForeignKey("manager.username"), primary_key=True))
 
 
 class TaskDB(Base):
@@ -39,6 +39,7 @@ class ManagerDB(Base):
     principals: List[str] = []
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
+
     # tasks = relationship("Task", secondary=task_manager, back_populates="task")
 
 
