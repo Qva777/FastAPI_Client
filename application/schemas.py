@@ -8,8 +8,6 @@ from pydantic import BaseModel, root_validator, Field, EmailStr
 from fastapi_permissions import Allow, Authenticated
 from passlib.context import CryptContext
 
-# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 class Status(int, Enum):
     """ Task statuses """
@@ -26,7 +24,8 @@ class Manager(BaseModel):
     email: Union[EmailStr, None] = Field(..., title="Email", )  ############
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
-    principals: List[str] = []
+
+    # tasks: List[int] = []#####
 
     class Config:
         """Providing configurations"""
@@ -50,10 +49,12 @@ class Task(BaseModel):
     name: Union[str, None] = Field(..., title="The name of the task", max_length=64)
     description: Union[str, None] = Field(..., title="The description of the task", max_length=250)
     status: Union[Status] = Field(..., title="The description of the task")
+    # managers: List[ta]
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 
-    # manager: List[Manager]
+    # managers: List[int] = []#####
+
     class Config:
         """Providing configurations"""
         validate_assignment = True
@@ -82,3 +83,23 @@ class TokenData(BaseModel):
 class ItemListResource:
     """ Permissions """
     __acl__ = [(Allow, Authenticated, "view")]
+
+# class ManagerOut(ManagerInDB):
+#     tasks: List[Task]
+#
+#
+# class TaskOut(Task):
+#     managers: List[Manager]
+
+# class TaskRead(HeroBase):
+#     id: int
+#
+# class ManageroRead(Manager):
+#     team: Optional[TeamRead] = None
+#
+# class TaskRead(HeroBase):
+#     id: int
+# class TaskReadWith(TaskRead):
+#     heroes: List[HeroRead] = []
+
+
