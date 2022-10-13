@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"qqqqqqq\",\r\n  \"first_name\": \"string\",\r\n  \"last_name\": \"string\",\r\n  \"email\": \"user@example.com\",\r\n  \"created_at\": \"2022-10-11T20:55:10.020227\",\r\n  \"updated_at\": \"2022-10-11T20:55:10.020227\",\r\n  \"hashed_password\": \"string\"\r\n}",
+					"raw": "{\r\n  \"username\": \"{{username}}2\",\r\n  \"first_name\": \"{{first_name}}\",\r\n  \"last_name\": \"{{last_name}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"created_at\": \"{{created_at}}\",\r\n  \"updated_at\": \"{{updated_at}}\",\r\n  \"hashed_password\": \"{{hashed_password}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -46,7 +46,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"aaaa\",\r\n  \"description\": \"string\",\r\n  \"status\": 3,\r\n  \"created_at\": \"2022-10-12T11:34:38.316475\",\r\n  \"updated_at\": \"2022-10-12T11:34:38.316475\"\r\n}",
+					"raw": "{\r\n  \"name\": \"Name of the task 1\",\r\n  \"description\": \"Specific description of the task to be performed\",\r\n  \"status\": 1,\r\n  \"created_at\": \"{{created_at}}\",\r\n  \"updated_at\": \"{{updated_at}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -74,6 +74,17 @@
 		},
 		{
 			"name": "Login (GET JWT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"jwt_token\", JSON.parse(responseBody).access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -82,12 +93,24 @@
 					"urlencoded": [
 						{
 							"key": "username",
-							"value": "test",
+							"value": "{{username}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "{{hashed_password}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "username",
+							"value": "bob2",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "test",
+							"value": "secret",
 							"type": "text"
 						}
 					]
@@ -118,7 +141,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjY1NTY5NjQ3fQ.pYDGdM8aBukspJem0CtG5nP_fkEIVrHblp06EFO1Cdg",
+							"value": "{{jwt_token}}",
 							"type": "string"
 						}
 					]
@@ -153,7 +176,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjY1NTY5NjQ3fQ.pYDGdM8aBukspJem0CtG5nP_fkEIVrHblp06EFO1Cdg",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -170,7 +193,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/manager/test/",
+					"raw": "http://127.0.0.1:8000/api/manager/k/",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -182,7 +205,7 @@
 					"path": [
 						"api",
 						"manager",
-						"test",
+						"k",
 						""
 					]
 				}
@@ -258,31 +281,7 @@
 			"response": []
 		},
 		{
-			"name": "http://127.0.0.1:8000/api/all-tasks/",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/all-tasks/",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8000",
-					"path": [
-						"api",
-						"all-tasks",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get task detail viev",
+			"name": "Task Detail View",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -307,9 +306,58 @@
 			"response": []
 		},
 		{
-			"name": "put task detail viev",
+			"name": "Task Detail View",
 			"request": {
 				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/task/1/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"task",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ALL Task (List)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/all-tasks/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"all-tasks",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Task Detail View",
+			"request": {
+				"method": "DELETE",
 				"header": [],
 				"url": {
 					"raw": "http://127.0.0.1:8000/api/task/1/",
