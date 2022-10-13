@@ -256,6 +256,80 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/all-tasks/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/all-tasks/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"all-tasks",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get task detail viev",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/task/{name}/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"task",
+						"{name}",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put task detail viev",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/task/1/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"task",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
