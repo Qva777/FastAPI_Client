@@ -1,12 +1,11 @@
 """ Schema json file """
 
 from enum import Enum
-from typing import Union, List
+from typing import Union
 from datetime import datetime
 
 from pydantic import BaseModel, root_validator, Field, EmailStr
 from fastapi_permissions import Allow, Authenticated
-from passlib.context import CryptContext
 
 
 class Status(int, Enum):
@@ -101,5 +100,3 @@ class ItemListResource:
 #     id: int
 # class TaskReadWith(TaskRead):
 #     heroes: List[HeroRead] = []
-
-
