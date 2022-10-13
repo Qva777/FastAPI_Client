@@ -9,6 +9,7 @@ from fastapi import HTTPException
 from fastapi_permissions import Everyone, configure_permissions
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends
+from passlib.context import CryptContext
 
 from application.schemas import *
 from application import models
@@ -19,12 +20,13 @@ from datetime import timedelta
 from sqlalchemy.orm import Session
 from pydantic import ValidationError
 from starlette.status import HTTP_401_UNAUTHORIZED
+
 # UPDATE secret key
-dotenv_file = os.path.join( ".env")
+dotenv_file = os.path.join(".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
 SECRET_KEY = os.environ['SECRET_KEY']
-# SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -74,17 +76,17 @@ def verify_password(plain_password, hashed_password):
     return plain_password == hashed_password
 
 
-def get_user(db, username: str):
-    if db.username == username:
-        print("user---", username)
-    return ManagerDB
+# def get_user(db, username: str):
+#     if db.username == username:
+#         print("user---", username)
+#     return ManagerDB
 
 
 def authenticate_user(db, username: str, password: str):
     user = db.query(models.ManagerDB).filter(models.ManagerDB.username == username).first()
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not pwd_context.verify(password, user.hashed_password):
         return False
     return user
 
