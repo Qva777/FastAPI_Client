@@ -33,10 +33,11 @@ class Manager(BaseModel):
 
     @root_validator
     def number_validator(cls, values):
-        """Update Validation"""
-        values["updated_at"] = datetime.now()
+        if values["updated_at"]:
+            values["updated_at"] = datetime.now()
+        else:
+            values["updated_at"] = values["created_at"]
         return values
-
 
 class ManagerInDB(Manager):
     """  manager's hashed password """
