@@ -25,6 +25,7 @@ def save_info_task(task_model, task, db):
     task_model.updated_at = task.updated_at
 
     # task_model.managers = task.managers
+    # task_model.managers = task.managers
 
     db.add(task_model)
     db.commit()
