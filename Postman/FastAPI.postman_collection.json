@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"{{username}}2\",\r\n  \"first_name\": \"{{first_name}}\",\r\n  \"last_name\": \"{{last_name}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"created_at\": \"{{created_at}}\",\r\n  \"updated_at\": \"{{updated_at}}\",\r\n  \"hashed_password\": \"{{hashed_password}}\"\r\n}",
+					"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"first_name\": \"{{first_name}}\",\r\n  \"last_name\": \"{{last_name}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"created_at\": \"{{created_at}}\",\r\n  \"updated_at\": \"{{updated_at}}\",\r\n  \"hashed_password\": \"{{hashed_password}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -46,7 +46,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Name of the task 1\",\r\n  \"description\": \"Specific description of the task to be performed\",\r\n  \"status\": 1,\r\n  \"created_at\": \"{{created_at}}\",\r\n  \"updated_at\": \"{{updated_at}}\"\r\n}",
+					"raw": "{\r\n  \"name\": \"{{name}}1\",\r\n  \"description\": \"Specific description of the task to be performed\",\r\n  \"status\": 1,\r\n  \"created_at\": \"{{created_at}}\",\r\n  \"updated_at\": \"{{updated_at}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -94,24 +94,24 @@
 						{
 							"key": "username",
 							"value": "{{username}}",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "password",
 							"value": "{{hashed_password}}",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "username",
 							"value": "bob2",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "password",
 							"value": "secret",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
@@ -149,7 +149,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/manager/test/",
+					"raw": "http://127.0.0.1:8000/api/manager/{{username}}/",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -161,7 +161,7 @@
 					"path": [
 						"api",
 						"manager",
-						"test",
+						"{{username}}",
 						""
 					]
 				}
@@ -176,7 +176,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "{{jwt_token}}",
 							"type": "string"
 						}
 					]
@@ -185,7 +185,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"test\",\r\n  \"first_name\": \"asdfg\",\r\n  \"last_name\": \"string\",\r\n  \"email\": \"user@example.com\",\r\n  \"created_at\": \"2022-10-11T20:55:10.020227\",\r\n  \"updated_at\": \"2022-10-11T20:55:10.020227\",\r\n  \"hashed_password\": \"test\"\r\n}",
+					"raw": "{\r\n  \"username\": \"bob\",\r\n  \"first_name\": \"rename\",\r\n  \"last_name\": \"rename\",\r\n  \"email\": \"{{email}}\",\r\n  \"created_at\": \"{{created_at}}\",\r\n  \"updated_at\": \"{{updated_at}}\",\r\n  \"hashed_password\": \"{{hashed_password}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -193,7 +193,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/manager/k/",
+					"raw": "http://127.0.0.1:8000/api/manager/{{username}}/",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -205,7 +205,7 @@
 					"path": [
 						"api",
 						"manager",
-						"k",
+						"{{username}}",
 						""
 					]
 				}
@@ -220,24 +220,15 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjY1NTY5NjQ3fQ.pYDGdM8aBukspJem0CtG5nP_fkEIVrHblp06EFO1Cdg",
+							"value": "{{jwt_token}}",
 							"type": "string"
 						}
 					]
 				},
 				"method": "DELETE",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/manager/test/",
+					"raw": "http://127.0.0.1:8000/api/manager/{{username}}/",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -249,7 +240,7 @@
 					"path": [
 						"api",
 						"manager",
-						"test",
+						"{{username}}",
 						""
 					]
 				}
@@ -262,7 +253,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/all-managers/",
+					"raw": "http://127.0.0.1:8000/api/all-managers/?page=1&size=50",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -275,6 +266,16 @@
 						"api",
 						"all-managers",
 						""
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "50"
+						}
 					]
 				}
 			},
@@ -283,10 +284,20 @@
 		{
 			"name": "Task Detail View",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/task/{name}/",
+					"raw": "http://127.0.0.1:8000/api/task/{{name}}1/",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -298,7 +309,7 @@
 					"path": [
 						"api",
 						"task",
-						"{name}",
+						"{{name}}1",
 						""
 					]
 				}
@@ -308,7 +319,61 @@
 		{
 			"name": "Task Detail View",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": 1,\r\n    \"name\": \"Name of the task1\",\r\n    \"description\": \"New description\",\r\n    \"created_at\": \"2022-10-11T20:55:10.020227\",\r\n    \"updated_at\": \"2022-10-13T23:30:08.686404\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/task/{{name}}1/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"task",
+						"{{name}}1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Task Detail View",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
 				"header": [],
 				"url": {
 					"raw": "http://127.0.0.1:8000/api/task/1/",
@@ -336,7 +401,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/all-tasks/",
+					"raw": "http://127.0.0.1:8000/api/all-tasks/?page=1&size=50",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -349,31 +414,16 @@
 						"api",
 						"all-tasks",
 						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Task Detail View",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/task/1/",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"port": "8000",
-					"path": [
-						"api",
-						"task",
-						"1",
-						""
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "50"
+						}
 					]
 				}
 			},
