@@ -19,6 +19,11 @@ def search_task_by_name(name, db):
 def save_info_task(task_model, task, db):
     """ Fields that are stored in the task table in the database """
     task_model.name = task.name
+    if db.query(models.TaskDB).filter(models.TaskDB.name == task_model.name).first():
+        raise HTTPException(
+            status_code=500,
+            detail=f"This name is already in use"
+        )
     task_model.description = task.description
     task_model.status = task.status
     task_model.created_at = task.created_at
@@ -30,6 +35,19 @@ def save_info_task(task_model, task, db):
     db.add(task_model)
     db.commit()
 
+
+def put_info_task(task_model, task, db):
+    """ Fields that are stored in the task table in the database """
+    task_model.name = task.name
+    task_model.description = task.description
+    task_model.status = task.status
+    task_model.created_at = task.created_at
+    task_model.updated_at = task.updated_at
+
+    task_model.managers = task.managers
+
+    db.add(task_model)
+    db.commit()
 
 def save_info_task_manager(task_manager, task, db):
     """ Fields that are stored in the task table in the database """
