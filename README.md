@@ -18,9 +18,12 @@
 <i>cd ../..</i>
 <h4>4 - Install libraries:</h4>
 <i>pip install -r requirements.txt</i>
-
+<h4>5 - In root folder create file ".evn"</h4>
+<i>echo SECRET_KEY=YOUR_SECRET_KEY > .env</i>
+<h4>6 - Run server:</h4>
+<i>uvicorn main:app --reload</i> 
 
 <h1>📮How to connect Postman: </h1>
 <h4>1 - Import Postman_Client folder into Postman</h4> 
-<h4>2 - The environment settings are called User Data</h4>
-<h4>3 - The Client_API collection contains requests</h4>
+<h4>2 - The environment settings are called FastAPI User Data</h4>
+<h4>3 - The FastAPI collection contains requests</h4>
