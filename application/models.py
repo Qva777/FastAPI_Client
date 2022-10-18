@@ -5,9 +5,10 @@ from sqlalchemy.orm import relationship
 from typing import List
 
 from application.database import Base, engine
-# task_manager = Table("task_manager", Base.metadata,
-#                      Column("task_name", ForeignKey("task.name"), primary_key=True),
-#                      Column("manager_username", ForeignKey("manager.username"), primary_key=True))
+
+task_manager = Table("task_manager", Base.metadata,#
+                     Column("task_id", ForeignKey("task.id"), primary_key=True),
+                     Column("manager_id", ForeignKey("manager.id"), primary_key=True))# Промнжуточная таблица
 class ManagerDB(Base):
     """Таблица моделей менеджеров в базе данных"""
     __tablename__ = 'manager'
@@ -19,8 +20,7 @@ class ManagerDB(Base):
     hashed_password = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
-
-    # tasks = relationship("Task", secondary=task_manager, back_populates="task")
+    tasks = relationship("TaskDB", secondary=task_manager, back_populates="managers")# подключение задачам
 class TaskDB(Base):
     """Таблица моделей задач в базе данных"""
     __tablename__ = 'task'
@@ -30,8 +30,5 @@ class TaskDB(Base):
     status = Column(Integer, ForeignKey('task.status'))
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
-
-    # managers = relationship("Manager", secondary=task_manager, back_populates="manager")
-
-
+    managers = relationship("ManagerDB", secondary=task_manager, back_populates="tasks")# подключение менеджерам
 Base.metadata.create_all(engine)
