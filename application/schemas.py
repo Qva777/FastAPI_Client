@@ -6,6 +6,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, root_validator, Field, EmailStr
 from fastapi_permissions import Allow, Authenticated
+
+
 class Status(int, Enum):
     """ Task statuses """
     CREATED = 1
@@ -41,15 +43,12 @@ class Task(BaseModel):
     status: Union[Status] = Field(..., title="The description of the task")
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
-
     # managers: List[Manager] = []
     # managers: List[int] = []#
-
     class Config:
         """Providing configurations"""
         validate_assignment = True
         orm_mode = True
-
     @root_validator
     def number_validator(cls, values):
         if values["updated_at"]:
@@ -57,7 +56,11 @@ class Task(BaseModel):
         else:
             values["updated_at"] = values["created_at"]
         return values
-
+class TaskSchema(Task):
+    managers: List[Manager]
+class ManagerSchema(Manager):
+    tasks: List[Task]
+######################################
 
 class Token(BaseModel):
     """ token class """
@@ -74,20 +77,3 @@ class ItemListResource:
     """ Permissions """
     __acl__ = [(Allow, Authenticated, "view")]
 
-# class ManagerOut(ManagerInDB):
-#     tasks: List[Task]
-#
-#
-# class TaskOut(Task):
-#     managers: List[Manager]
-
-# class TaskRead(HeroBase):
-#     id: int
-#
-# class ManageroRead(Manager):
-#     team: Optional[TeamRead] = None
-#
-# class TaskRead(HeroBase):
-#     id: int
-# class TaskReadWith(TaskRead):
-#     heroes: List[HeroRead] = []
