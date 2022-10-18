@@ -7,7 +7,7 @@ from application.auth import *
 from application.manager_methods import save_info_manager, search_manager_by_username
 from application.schemas import *
 from application import models
-from application.task_methods import save_info_task, search_task_by_name, save_info_task_manager
+from application.task_methods import save_info_task, search_task_by_name, save_info_task_manager, put_info_task#
 
 app = FastAPI(title="FastAPI_Client")
 
@@ -44,10 +44,10 @@ async def create_task(task: Task, db: Session = Depends(get_db)):
 
 
 @app.put("/api/task/{name}", tags=["PUT Methods"])
-def update_task(name: str, task: Task, db: Session = Depends(get_db),
+def update_task(name: str, task: TaskSchema, db: Session = Depends(get_db),#
                 ilr: ItemListResource = Permission("view", ItemListResource)):
     """ Update task """
-    save_info_task(search_task_by_name(name, db), task, db)
+    put_info_task(search_task_by_name(name, db), task, db)#
     return task
 
 
