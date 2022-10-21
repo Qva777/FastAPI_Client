@@ -1,7 +1,7 @@
-FROM python
+FROM python:3.8
 
-WORKDIR /app
+WORKDIR /appfolder
 
-COPY . /Docker_app
+COPY . .
 RUN pip install -r requirements.txt
-CMD ["python3.8","main.py"]
+CMD ["python","main.py"]
