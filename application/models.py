@@ -31,4 +31,5 @@ class TaskDB(Base):
     created_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     updated_at = Column(DateTime(timezone=True), server_default=sql.func.now())
     managers = relationship("ManagerDB", secondary=task_manager, back_populates="tasks")# подключение менеджерам
+
 Base.metadata.create_all(engine)
