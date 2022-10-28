@@ -1,13 +1,15 @@
 """ Main file with URL/Methods  """
 from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_pagination import Page, paginate, add_pagination
 
 from application.auth import *
-from application.manager_methods import save_info_manager, search_manager_by_username
+from application.manager_methods import save_info_manager, search_manager_by_username, put_info_manager
 from application.schemas import *
 from application import models
-from application.task_methods import save_info_task, search_task_by_name, save_info_task_manager, put_info_task#
+from application.task_methods import *
+
 
 app = FastAPI(title="FastAPI_Client")
 
@@ -20,7 +22,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 # TASK URL
-@app.get('/api/all-tasks/', response_model=Page[Task], tags=["GET Methods"])
+@app.get('/api/all-tasks/', response_model=Page[TaskSchema], tags=["GET Methods"])
 async def get_all_tasks(db: Session = Depends(get_db)):
     """ GET all tasks in db """
     return paginate(db.query(models.TaskDB).all())
@@ -44,10 +46,11 @@ async def create_task(task: Task, db: Session = Depends(get_db)):
 
 
 @app.put("/api/task/{name}", tags=["PUT Methods"])
-def update_task(name: str, task: TaskSchema, db: Session = Depends(get_db),#
-                ilr: ItemListResource = Permission("view", ItemListResource)):
+def update_task(name: str, task: TaskSchema, db: Session = Depends(get_db)#,
+                #ilr: ItemListResource = Permission("view", ItemListResource)
+):
     """ Update task """
-    put_info_task(search_task_by_name(name, db), task, db)#
+    put_info_task(search_task_by_name(name, db), task, db)  #
     return task
 
 
@@ -84,10 +87,9 @@ async def get_manager(username: str, db: Session = Depends(get_db),
 
 
 @app.put("/api/manager/{username}", tags=["PUT Methods"])
-async def update_manager(username: str, manager: ManagerInDB, db: Session = Depends(get_db),
-                         lr: ItemListResource = Permission("view", ItemListResource)):
+async def update_manager(username: str, manager: ManagerSchema, db: Session = Depends(get_db)):
     """ Update info user """
-    save_info_manager(search_manager_by_username(username, db), manager, db)
+    put_info_manager(search_manager_by_username(username, db), manager, db)
     return manager
 
 
@@ -101,10 +103,10 @@ async def delete_manager(username: str, db: Session = Depends(get_db),
     return "Object removed"
 
 
-@app.get('/api/all-managers/', response_model=Page[ManagerInDB], tags=["GET Methods"])
+@app.get('/api/all-managers/', response_model=Page[ManagerSchema], tags=["GET Methods"])
 async def get_all_managers(db: Session = Depends(get_db)):
     """ Get info about all users """
     return paginate(db.query(models.ManagerDB).all())
 
-
 add_pagination(app)
+
