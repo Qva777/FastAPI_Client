@@ -3,7 +3,7 @@
 from fastapi import HTTPException
 from application import models
 from application.auth import pwd_context
-from application.models import ManagerDB
+from application.models import ManagerDB, TaskDB, task_manager
 
 
 def search_manager_by_username(username, db):
@@ -39,14 +39,9 @@ def save_info_manager(manager_model, manager, db):
     db.commit()
 
 
-def put_info_task(manager_model, manager, db):
+def put_info_manager(manager_model, manager, db):
     """ Добавить к менеджеру таск  """
-    manager_model.username = manager.username
-    if db.query(models.ManagerDB).filter(models.ManagerDB.username == manager_model.username).first():
-        raise HTTPException(
-            status_code=500,
-            detail=f"This username is already in use"
-        )
+
     manager_model.hashed_password = pwd_context.hash(manager.hashed_password)
     manager_model.first_name = manager.first_name
     manager_model.last_name = manager.last_name
@@ -54,7 +49,8 @@ def put_info_task(manager_model, manager, db):
     manager_model.created_at = manager.created_at
     manager_model.updated_at = manager.updated_at
     # *
-    manager_model.tasks = manager.tasks
+    task_manager.task_id = manager.tasks
+    manager_model.tasks = task_manager.task_id
 
     db.add(manager_model)
     db.commit()
