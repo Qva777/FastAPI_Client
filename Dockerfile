@@ -7,6 +7,6 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
-CMD ["python","main.py", "echo SECRET_KEY=YOUR_SECRET_KEY > .env", "uvicorn main:app --reload"]
+CMD ["echo SECRET_KEY=YOUR_SECRET_KEY > .env", "uvicorn main:app --reload"]
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
