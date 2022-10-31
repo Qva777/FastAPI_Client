@@ -73,6 +73,10 @@ class ManagerSchema(ManagerInDB):
     tasks: Union[int, None]
 
 
+class TaskManager(BaseModel):
+    managers: Union[str, None]
+    tasks: Union[str, None]
+
 ######################################
 class Token(BaseModel):
     """ token class """
