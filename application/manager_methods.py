@@ -41,7 +41,7 @@ def save_info_manager(manager_model, manager, db):
 
 def put_info_manager(manager_model, manager, db):
     """ Добавить к менеджеру таск  """
-
+    manager_task = TaskManager()
     manager_model.hashed_password = pwd_context.hash(manager.hashed_password)
     manager_model.first_name = manager.first_name
     manager_model.last_name = manager.last_name
@@ -49,8 +49,8 @@ def put_info_manager(manager_model, manager, db):
     manager_model.created_at = manager.created_at
     manager_model.updated_at = manager.updated_at
     # *
-    task_manager.task_id = manager.tasks
-    manager_model.tasks = task_manager.task_id
-
-    db.add(manager_model)
+    # task_manager.tasks = manager.tasks
+    # TaskManager = manager.tasks
+    manager_task = manager_model.username
+    db.add(manager_model, manager_task)
     db.commit()
