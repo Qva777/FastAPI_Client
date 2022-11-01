@@ -29,5 +29,7 @@
 <h4>3 - The FastAPI collection contains requests</h4>
 
 <h1>How to connect Docker:</h1>
-<h4>Creat image</h4>
-<h4></h4>
+<h4>Creat image:</h4>
+<i><i>
+<h4>Run container:</h4>
+<i><i>
