@@ -27,3 +27,5 @@
 <h4>1 - Import Postman_Client folder into Postman</h4> 
 <h4>2 - The environment settings are called FastAPI User Data</h4>
 <h4>3 - The FastAPI collection contains requests</h4>
+
+<h1>How to connect Docker:<h1>
