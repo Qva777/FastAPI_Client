@@ -30,6 +30,6 @@
 
 <h1>How to connect Docker:</h1>
 <h4>Creat image:</h4>
-<i>docker build --tag fastapi<i>
+<i>docker build --tag fastapi .<i>
 <h4>Run container:</h4>
 <i><i>
