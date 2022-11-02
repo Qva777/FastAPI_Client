@@ -32,4 +32,4 @@
 <h4>Creat image:</h4>
 <i>docker build --tag fastapi .<i>
 <h4>Run container:</h4>
-<i><i>
+<i>docker run fastapi<i>
