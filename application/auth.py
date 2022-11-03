@@ -25,7 +25,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 dotenv_file = os.path.join(".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = "SECRET_KEY"#os.environ['SECRET_KEY']
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
