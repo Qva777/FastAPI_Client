@@ -20,7 +20,7 @@ class Manager(BaseModel):
     username: Union[str, None] = Field(..., title="Username", max_length=64)
     first_name: Union[str, None] = Field(..., title="First name", max_length=250)
     last_name: Union[str, None] = Field(..., title="Last name", max_length=250)
-    email: Union[EmailStr, None] = Field(..., title="Email", )  ############
+    email: Union[EmailStr, None] = Field(..., title="Email", )  #
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
 
