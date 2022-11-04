@@ -29,3 +29,13 @@ RUN apt-get update \
     && apt-get -y install gcc make \
     && rm -rf /var/lib/apt/lists/*s
 
+WORKDIR /code
+
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+COPY ./requirements.txt /code/requirements.txt
+
+RUN pip install -r /code/requirements.txt
+
