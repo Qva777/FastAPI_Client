@@ -34,4 +34,4 @@
 <h4>2 - Look images:</h4>
 <i>docker images</i>
 <h4>3 - Run Container</h4>
-<i>docker run fastapi</i>
+<i>docker run -d --name mycont -p 8000:8000 fastapi</i>
