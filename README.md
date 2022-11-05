@@ -33,5 +33,5 @@
 <i>docker build --tag fastapi .</i>
 <h4>2 - Look images:</h4>
 <i>docker images</i>
-<h4>3 - Run Container</h4>
+<h4>3 - Run Container localhost - 127.0.0.1:8000</h4>
 <i>docker run -d --name mycont -p 8000:8000 fastapi</i>
