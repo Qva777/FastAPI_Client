@@ -8,16 +8,13 @@ FROM python:3.8
 #LABEL tutorial1="Docker" tutorial2="LABEL INSTRUCTION"
 #RUN apk update && apk upgrade && apk add bash
 
-
 WORKDIR /app
 RUN pip install pip
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-
-
+RUN echo SECRET_KEY=YOUR_SECRET_KEY > .env
 
 COPY . .
 EXPOSE 8000
-#RUN echo SECRET_KEY=YOUR_SECRET_KEY > .env
 ENTRYPOINT uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
