@@ -10,13 +10,11 @@
 <i>python -m venv venv</i>
 <h4>2 - Activate it:</h4> 
 <i>.\venv\Scripts\activate</i>
-<h4>3 - In the Console, go to the root folder:</h4>
-<i>cd ../..</i>
-<h4>4 - Install libraries:</h4>
+<h4>3 - Install libraries:</h4>
 <i>pip install -r requirements.txt</i>
-<h4>5 - In root folder create file ".evn"</h4>
+<h4>4 - In root folder create file ".evn"</h4>
 <i>echo SECRET_KEY=YOUR_SECRET_KEY > .env</i>
-<h4>6 - Run server:</h4>
+<h4>5 - Run server:</h4>
 <i>uvicorn main:app --reload</i> 
 
 <h1>📮How to connect Postman: </h1>
