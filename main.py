@@ -87,7 +87,7 @@ async def get_manager(username: str, db: Session = Depends(get_db),
 
 
 @app.put("/api/manager/{username}", tags=["PUT Methods"])
-async def update_manager(username: str, manager: ManagerSchema, db: Session = Depends(get_db)):
+async def update_manager(username: str, manager: ManagerInDB, db: Session = Depends(get_db)):
     """ Update info user """
     put_info_manager(search_manager_by_username(username, db), manager, db)
     return manager
@@ -103,7 +103,7 @@ async def delete_manager(username: str, db: Session = Depends(get_db),
     return "Object removed"
 
 
-@app.get('/api/all-managers/', response_model=Page[ManagerSchema], tags=["GET Methods"])
+@app.get('/api/all-managers/', response_model=Page[ManagerInDB], tags=["GET Methods"])
 async def get_all_managers(db: Session = Depends(get_db)):
     """ Get info about all users """
     return paginate(db.query(models.ManagerDB).all())

@@ -43,9 +43,9 @@ Base.metadata.create_all(engine)
 #
 
 
-task_manager = Table("task_manager", Base.metadata,  #
-                     Column("task_id", ForeignKey("task.id")),
-                     Column("manager_id", ForeignKey("manager.id")))  # Промнжуточная таблица
+# task_manager = Table("task_manager", Base.metadata,  #
+#                      Column("task_id", ForeignKey("task.id")),
+#                      Column("manager_id", ForeignKey("manager.id")))  # Промнжуточная таблица
 
 
 class ManagerDB(Base):

@@ -3,7 +3,7 @@
 from fastapi import HTTPException
 from application import models
 from application.auth import pwd_context
-from application.models import ManagerDB, TaskDB, task_manager
+# from application.models import ManagerDB, TaskDB, task_manager
 
 
 def search_manager_by_username(username, db):
@@ -42,6 +42,7 @@ def save_info_manager(manager_model, manager, db):
 def put_info_manager(manager_model, manager, db):
     """ Добавить к менеджеру таск  """
     # manager_task = TaskManager()
+    manager_model.username = manager.username
     manager_model.hashed_password = pwd_context.hash(manager.hashed_password)
     manager_model.first_name = manager.first_name
     manager_model.last_name = manager.last_name
@@ -51,6 +52,6 @@ def put_info_manager(manager_model, manager, db):
     # *
     # task_manager.tasks = manager.tasks
     # TaskManager = manager.tasks
-    manager_task = manager_model.username
-    db.add(manager_model, manager_task)
+    # manager_task = manager_model.username
+    db.add(manager_model)  # , manager_task)
     db.commit()
