@@ -17,6 +17,7 @@
 <h4>5 - Run server:</h4>
 <pre>uvicorn main:app --reload</pre> 
 
+
 <h1>📮How to connect Postman: </h1>
 <h4>1 - Import Postman_Client folder into Postman</h4> 
 <h4>2 - The environment settings are called FastAPI User Data</h4>
@@ -24,8 +25,8 @@
 
 <h1>🐳How to connect Docker:</h1>
 <h4>1 - Creat image:</h4>
-<i>docker build --tag fastapi .</i>
+<pre>docker build --tag fastapi .</pre>
 <h4>2 - Look images:</h4>
-<i>docker images</i>
+<pre>docker images</pre>
 <h4>3 - Run Container localhost - 127.0.0.1:8000</h4>
-<i>docker run -d --name mycontainer -p 8000:8000 fastapi</i>
+<pre>docker run -d --name mycontainer -p 8000:8000 fastapi</pre>
