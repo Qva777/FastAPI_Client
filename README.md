@@ -7,15 +7,15 @@
 </ul>
 <h3>Manual start⬇</h3>
 <h4>1 - Connect venv:</h4> 
-<i>python -m venv venv</i>
+<pre>python -m venv venv</pre>
 <h4>2 - Activate it:</h4> 
-<i>.\venv\Scripts\activate</i>
+<pre>.\venv\Scripts\activate</pre>
 <h4>3 - Install libraries:</h4>
-<i>pip install -r requirements.txt</i>
+<pre>pip install -r requirements.txt</pre>
 <h4>4 - In root folder create file ".evn"</h4>
-<i>echo SECRET_KEY=YOUR_SECRET_KEY > .env</i>
+<pre>echo SECRET_KEY=YOUR_SECRET_KEY > .env</pre>
 <h4>5 - Run server:</h4>
-<i>uvicorn main:app --reload</i> 
+<pre>uvicorn main:app --reload</pre> 
 
 <h1>📮How to connect Postman: </h1>
 <h4>1 - Import Postman_Client folder into Postman</h4> 
