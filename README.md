@@ -16,7 +16,7 @@
 <pre>echo SECRET_KEY=YOUR_SECRET_KEY > .env</pre>
 <h4>5 - Run server:</h4>
 <pre>uvicorn main:app --reload</pre> 
-
+<h1> for mac</h1>
 
 <h1>📮How to connect Postman: </h1>
 <h4>1 - Import Postman_Client folder into Postman</h4> 
