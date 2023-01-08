@@ -1,6 +1,6 @@
 <h1>📍How to install: </h1>
 
-<h3>Automatic command execution for the first run</h3>
+<details><summary><h3>Automatic command execution for the first run</h3></summary><br>
 <ul>
   <li>🔧for Windows:     <b>first_start.bat</b></li>
   <li>⚙for Linux/MacOS: <b>first_start.sh</b></li>
@@ -16,8 +16,7 @@
 <pre>echo SECRET_KEY=YOUR_SECRET_KEY > .env</pre>
 <h4>5 - Run server:</h4>
 <pre>uvicorn main:app --reload</pre> 
-<h1> for mac</h1>
-
+</details>
 <h1>📮How to connect Postman: </h1>
 <h4>1 - Import Postman_Client folder into Postman</h4> 
 <h4>2 - The environment settings are called FastAPI User Data</h4>
