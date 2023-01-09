@@ -5,7 +5,8 @@
   <li>🔧for Windows:     <b>first_start.bat</b></li>
   <li>⚙for Linux/MacOS: <b>first_start.sh</b></li>
 </ul>
-<h3>Manual start⬇</h3>
+</details>
+<details><summary><h3>Manual start⬇</h3></summary><br/>
 <h4>1 - Connect venv:</h4> 
 <pre>python -m venv venv</pre>
 <h4>2 - Activate it:</h4> 
@@ -18,14 +19,14 @@
 <pre>uvicorn main:app --reload</pre> 
 </details>
 
-<h1>📮How to connect Postman: </h1>
-<details><h4>1 - Import Postman_Client folder into Postman</h4> 
+<details><summary><h1>📮How to connect Postman: </h1></summary><br/>
+<h4>1 - Import Postman_Client folder into Postman</h4> 
 <h4>2 - The environment settings are called FastAPI User Data</h4>
 <h4>3 - The FastAPI collection contains requests</h4>
 </details>
 
-<h1>🐳How to connect Docker:</h1>
-<details><h4>1 - Creat image:</h4>
+<details><summary><h1>🐳How to connect Docker:</h1></summary><br/>
+<h4>1 - Creat image:</h4>
 <pre>docker build --tag fastapi .</pre>
 <h4>2 - Look images:</h4>
 <pre>docker images</pre>
